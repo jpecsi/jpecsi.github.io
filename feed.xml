@@ -1,3 +1,102 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.2">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2022-08-29T17:51:31+00:00</updated><id>http://0.0.0.0:4000/feed.xml</id><title type="html">Joe Pecsi</title><subtitle>A Repository of Technical Rambling</subtitle><author><name>Joe Pecsi</name></author><entry><title type="html">Coming Soon</title><link href="http://0.0.0.0:4000/2022/08/26/welcome.html" rel="alternate" type="text/html" title="Coming Soon" /><published>2022-08-26T00:00:00+00:00</published><updated>2022-08-26T00:00:00+00:00</updated><id>http://0.0.0.0:4000/2022/08/26/welcome</id><content type="html" xml:base="http://0.0.0.0:4000/2022/08/26/welcome.html">&lt;h3 id=&quot;hello&quot;&gt;Hello!&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.2">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2022-09-02T11:59:54+00:00</updated><id>http://0.0.0.0:4000/feed.xml</id><title type="html">Joe Pecsi</title><subtitle>A Repository of Technical Rambling</subtitle><author><name>Joe Pecsi</name></author><entry><title type="html">Beer Management</title><link href="http://0.0.0.0:4000/2022/09/01/kegwatch.html" rel="alternate" type="text/html" title="Beer Management" /><published>2022-09-01T00:00:00+00:00</published><updated>2022-09-01T00:00:00+00:00</updated><id>http://0.0.0.0:4000/2022/09/01/kegwatch</id><content type="html" xml:base="http://0.0.0.0:4000/2022/09/01/kegwatch.html">&lt;h1 id=&quot;i-like-beer&quot;&gt;I like beer…&lt;/h1&gt;
 
-&lt;p&gt;I’m still working on a few things here, so be sure to come back and check it out :)&lt;/p&gt;</content><author><name>Joe Pecsi</name></author><summary type="html">Hello!</summary></entry></feed>
+&lt;p&gt;When we moved into our house 2 years ago, my wife bought me a kegerator as an anniversary gift. It has been a blast having different beers on rotation at the house, playing with custom tap handles, and having draught beer whenever I want. However, one of the most annoying things about using kegs is not knowing how much beer is left. Anyone that has a kegerator knows that dreaded feeling when half way through pouring a beer a blast of foam and air come shooting out of the faucet, or, when you’re about to host people and have no clue if there is enough beer left to get everyone through the night! That’s what inspired this project.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;how&quot;&gt;How?&lt;/h1&gt;
+&lt;p&gt;I’m a big believer in not reinventing the wheel, so if a product exits i’m going to explore that first. Believe it or not, there isn’t a large market for monitoring kegs at home. I came across one product which was essentially a smart scale for the kegs, but it had mixed reviews and little information (as well as a high price tag). I quickly realized I would be better off building something myself. Realistically, there were two ways I could go about this:&lt;/p&gt;
+
+&lt;h3 id=&quot;weight&quot;&gt;Weight&lt;/h3&gt;
+&lt;p&gt;This is the simplest way…get the weight of an empty keg and a full keg, do some math, and estimate how much beer is left. There are a few issues/concerns here though:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Drift; I looked into using load cells to build a scale but the most common complaints were drifting over time. I was fairly confident I could counteract this programmatically, but…&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;I don’t have a lot of spare room in my kegerator to lift the kegs more than an inch or so. This means I would have to build an incredibly thin scale and deal with increased difficulty swapping kegs out&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;The third concern was dealing with components inside the kegerator. I would have to get wires to come out which would not only look ugly if going out the door, could affect temperature control&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;flow&quot;&gt;Flow&lt;/h3&gt;
+&lt;p&gt;There are a few ways to measure flow; flow rate sensors (which would go in the middle of my beer lines and measure liquid flowing through) and time based (literally estimating how much was poured based on the amount of time the tap was open). I had a few concerns about the flow rate sensors:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;The most commonly used ones (for this application) that were food grade and reliable were pretty expensive, I was aiming to keep the cost down overall since it is just a silly side project&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;I was having trouble finding documentation on how to read/use the data, and that was concerning&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;This is probably not the best reason, but, it took me a &lt;em&gt;very&lt;/em&gt; long time to balance my draught system. I’ve spent a year or so battling with foam, flat beer, etc. and the thought of putting somehting in the middle of my beer lines freaked me out&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;In the end, I decided to go with a time based solution. While there are some accuracy concerns I think this will be the best solution for my application. I’ve put a lot of time into balancing my draught system so I am confident that the flow rate is pretty consistent.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;implementation&quot;&gt;Implementation&lt;/h1&gt;
+&lt;p&gt;I decided I would use reed switches to figure out when the tap was open or closed. I thought about using microswitches briefly, but thought it might be easier to use magnets. The idea is pretty simple, time how long the tap handle is open and estimate how much beer was poured (based on a known oz per second measurement).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/posts/20220901-kegwatch/KegWatch_TopView.jpeg&quot; alt=&quot;KegWatch Hardware&quot; class=&quot;center&quot; width=&quot;75%&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;hardware&quot;&gt;Hardware&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Raspberry Pi 3B+ (had a spare laying around)&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.amazon.com/dp/B07YFBQ4HS?psc=1&amp;amp;ref=ppx_yo2ov_dt_b_product_details&quot;&gt;Generic reed switches I found on Amazon&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Blue LEDs and 330 Ohm resistors&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;software&quot;&gt;Software&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Python&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;MQTT (for Home Assistant)&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;MongoDB&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;configuration&quot;&gt;Configuration&lt;/h3&gt;
+&lt;p&gt;Everything is written in Python and I am using Mongo to store configuration settings, details about the beers on tap, and finally a log of every beer poured. As soon as a beer is poured the data is logged and immediately pushed via MQTT to my Home Assistant server.&lt;/p&gt;
+
+&lt;p&gt;I wrote a calibration script that I will use if I change the pressure or temperature just to ensure it remains as accurate as possible. When the calibration script runs it asks how many ounces will be poured and which tap will be used. Once the data is entered all you have to do is pour a beer and it’ll save the oz per second measurement into the database.&lt;/p&gt;
+
+&lt;p&gt;The sensor code runs in the background 24/7 and waits for one of the tap handles to open. I’m using the LEDs as indicators so that I can be sure the measurements are actually happening when beer is poured.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;whats-next&quot;&gt;What’s next?&lt;/h1&gt;
+&lt;p&gt;&lt;img src=&quot;/img/posts/20220901-kegwatch/KegWatch_Testing.jpeg&quot; alt=&quot;KegWatch Hardware&quot; class=&quot;center&quot; width=&quot;40%&quot; id=&quot;right_align&quot; /&gt;
+My first few trial runs were extremely successful. I used cardboard and tape to make temporary mounts just to make sure the code worked, and then took it all down after a few beers. I’m designing a mount that can be 3D printed to hold the Pi, switches, LEDs, and magnets.&lt;/p&gt;
+
+&lt;style type=&quot;text/css&quot; rel=&quot;stylesheet&quot;&gt;
+*   #right_align  {
+    float: right;    
+    margin: 0 0 0 15px;
+    }
+&lt;/style&gt;
+
+&lt;p&gt;After the physical mounts are finalized then technically the system is done/complete. The next big feature I want to work on is adding a web interface (likely using Vue) to administer the system (run calibrations, change tap settings, etc.) and also graph all of the fun beer statistics!&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;If you want to check out the code, &lt;a href=&quot;https://github.com/jpecsi/KegWatch&quot;&gt;you can find the repo here&lt;/a&gt;. This project is still very much in the beginning stages, and I will be updating it over the next few weeks!&lt;/p&gt;</content><author><name>Joe Pecsi</name></author><summary type="html">I like beer…</summary></entry></feed>
