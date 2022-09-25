@@ -1,4 +1,136 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.2">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2022-09-02T12:12:32+00:00</updated><id>http://0.0.0.0:4000/feed.xml</id><title type="html">Joe Pecsi</title><subtitle>A Repository of Technical Rambling</subtitle><author><name>Joe Pecsi</name></author><entry><title type="html">Beer Management</title><link href="http://0.0.0.0:4000/2022/09/01/kegwatch.html" rel="alternate" type="text/html" title="Beer Management" /><published>2022-09-01T00:00:00+00:00</published><updated>2022-09-01T00:00:00+00:00</updated><id>http://0.0.0.0:4000/2022/09/01/kegwatch</id><content type="html" xml:base="http://0.0.0.0:4000/2022/09/01/kegwatch.html">&lt;h1 id=&quot;i-like-beer&quot;&gt;I like beer…&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.2">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" /><updated>2022-09-25T03:04:21+00:00</updated><id>http://0.0.0.0:4000/feed.xml</id><title type="html">Joe Pecsi</title><subtitle>A Repository of Technical Rambling</subtitle><author><name>Joe Pecsi</name></author><entry><title type="html">Data Visualization</title><link href="http://0.0.0.0:4000/2022/09/24/visualization.html" rel="alternate" type="text/html" title="Data Visualization" /><published>2022-09-24T00:00:00+00:00</published><updated>2022-09-24T00:00:00+00:00</updated><id>http://0.0.0.0:4000/2022/09/24/visualization</id><content type="html" xml:base="http://0.0.0.0:4000/2022/09/24/visualization.html">&lt;h1 id=&quot;oh-look-data&quot;&gt;Oh look, data!&lt;/h1&gt;
+
+&lt;p&gt;I recently built a system that monitors my kegerator and will track when beer is poured. What started as a simple project to estimate how much beer I had left has evolved into something much bigger. My original plan was to report data to my Home Assistant server via MQTT, but after the sensor was actually in place I realized I wanted much more data.&lt;/p&gt;
+
+&lt;p&gt;As of now I keep a &lt;em&gt;beer log&lt;/em&gt; and a &lt;em&gt;keg log&lt;/em&gt;. The beer log is a table that tracks every single pour. As soon as a beer is poured the system logs the date/time, tap number, beer name, oz poured, oz remaining, and the name of the person that poured the beer.&lt;/p&gt;
+
+&lt;p&gt;The keg log is basically a way to look back at what kegs I have had over time. This table is only updated once a keg is kicked. When the last beer is poured and the oz remaining hits 0, the system logs the name of the beer, the date it was tapped, the date it was kicked, and the days it took to consume.&lt;/p&gt;
+
+&lt;p&gt;After I set this up and data started pouring in, I realized I needed a better way to look at it. Instead of reinventing the wheel and building a custom web app, I turned to &lt;strong&gt;Grafana&lt;/strong&gt;!&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;backend&quot;&gt;Backend&lt;/h2&gt;
+&lt;p&gt;The KegWatch system runs on a Raspberry Pi 3B+. I thought about hosting Grafana and the database on the Pi, but I had the resources to host that stuff elsewhere via Docker and figured it would be nice to have the data in a safe place separate from the sensor.&lt;/p&gt;
+
+&lt;p&gt;I have a Synology DS918+ that runs several services for my house (e.g. Plex, media storage/file server, DNS, reverse proxy, and a few self-hosted services via Docker). I spun up a MySQL container for KegWatch and then a separate Grafana container. Now the data is safe (and backed up) and the performance is great!&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;frontend&quot;&gt;Frontend&lt;/h2&gt;
+&lt;p&gt;Grafana is &lt;strong&gt;&lt;em&gt;awesome&lt;/em&gt;&lt;/strong&gt;. It’s incredibly powerful and fun to use. If you aren’t familiar with it already, the short summary is that Grafana is a data visualization platform. It has a web interface and relies on external data sources such as time-series databases, document based databases, SQL databases, etc. It has the ability to run queries and transform data to build useful dashboards of pertinent information.&lt;/p&gt;
+
+&lt;p&gt;As I mentioned, I only have two tables in my database but I am tracking a ton of information. After putting some thought into what I actually wanted to see I came up with this list:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;How much beer is left (per tap)&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Which beers tend to be more popular&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;A “leaderboard” which tracks who consumes the most beer&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;A log of beers poured&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;beer-remaining--beer-log&quot;&gt;Beer Remaining / Beer Log&lt;/h3&gt;
+
+&lt;p&gt;Beer remaining is pretty simple and I just wanted it displayed as a bar style gauge. Because I capture the &lt;em&gt;oz Remaining&lt;/em&gt; in the records, I use the below query to grab the data for the appropriate tap. One of the settings for the gauge is what to do with the numeric data (sum, mean, first, last, etc.). While I could choose 1 record with the SQL query itself, I opted to just apply the &lt;em&gt;Last&lt;/em&gt; setting to the gauge. This means it’ll grab the last record for the tap and use that to display how many oz remain in the keg.&lt;/p&gt;
+
+&lt;p&gt;Here is the query I am using:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SELECT
+  oz_remain
+FROM beer_log
+WHERE
+  tap = 1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The beer log was very easy, I chose to just display a table and grab the data from the &lt;em&gt;beer log&lt;/em&gt; table. The query for that looks like this:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SELECT
+  time AS &quot;Time&quot;,
+  beer_name AS &quot;Beer&quot;,
+  oz_poured AS &quot;oz Poured&quot;,
+  oz_remain AS &quot;oz Remaining&quot;,
+  consumer AS &quot;Consumer&quot;
+  
+FROM beer_log
+WHERE
+  tap = 1
+ORDER BY time
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;All of that data allowed me to throw this together:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/posts/20220924-visualization/viz01.png&quot; alt=&quot;Beer Log&quot; class=&quot;center&quot; width=&quot;100%&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;most-popular-beer&quot;&gt;Most Popular Beer&lt;/h3&gt;
+&lt;p&gt;This was actually fun to implement! While maybe not a direct mapping to how popular the beer is, I track how long it takes to kick a keg. When you tap a new keg you do so by updating the &lt;em&gt;settings.conf&lt;/em&gt; file for KegWatch:&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[tap_1]
+...
+# Beer info (capacity/remaining measured in oz)
+beer_name = Hazy Little Thing
+keg_capacity = 672
+keg_remaining = 672
+
+# Date keg was tapped (YYYY-MM-DD)
+date_tapped = 2022-09-24
+active = 1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Once the &lt;em&gt;oz Remaining&lt;/em&gt; hits 0 the sensor will grab the date tapped from the config file and mark it inactive. I will grab the current date and calculate the difference (in days) between the date the keg kicked (hit 0oz) and the date it was tapped. That’s what gets logged into the &lt;em&gt;keg log&lt;/em&gt; table.&lt;/p&gt;
+
+&lt;p&gt;I use this SQL query:&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SELECT
+  beer_name as &quot;Beer&quot;,
+  days_to_consume as &quot;Days to Consume&quot;,
+  date_tapped as &quot;Tapped&quot;,
+  date_kicked as &quot;Kicked&quot;
+FROM keg_log
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This allows me to create a cool visual:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/posts/20220924-visualization/viz02.png&quot; alt=&quot;Popular Beer&quot; class=&quot;center&quot; width=&quot;100%&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;leaderboard&quot;&gt;Leaderboard&lt;/h3&gt;
+
+&lt;p&gt;A leaderboard for drinking beer is awesome, and while it may get some of us in trouble down the road, it will absolutely be a fun party trick to break out. For this to work I need to be able to track who is drinking beer. I spent &lt;strong&gt;&lt;em&gt;a lot&lt;/em&gt;&lt;/strong&gt; of time on this…I really wanted to do NFC or RFID tags embedded in cups (think Tervis cups). If I applied it to the outside of the cup somehow, it would no longer be dishwasher safe. Tervis &lt;em&gt;does&lt;/em&gt; allow you to mail in a physical design/patch to be inserted into a cup…but that would be a gamble. Who knows if the tag would be thin enough or durable enough?&lt;/p&gt;
+
+&lt;p&gt;Then I thought about AI…I could put a camera near the kegerator and build a library of my friends’ faces! This had issues as well, I frequently pour beer for my guests so that breaks it immediately, and it would be slow. I finally came to the conclusion of using barcodes. Using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;code128&lt;/code&gt; encoding and a barcode reader, I have generated bar codes for friends and family using their first and last name. I placed a barcode reader on the kegerator, tweaked the code, and boom…now I have user tracking. Right now I have the barcodes printed on slips of paper but have plans on having custom Tervis cups made with the barcodes printed somewhere (&lt;em&gt;no, i’m not a Tervis rep…they just offer the best option for custom designs&lt;/em&gt;).&lt;/p&gt;
+
+&lt;p&gt;Encoding full names into the barcode itself also allows me to not need a user/cup table in the database. Before learning I could encode full text into a barcode, I had planned on using serial numbers (e.g. 0000, 0001, 0002) and mapping those serial numbers to names. If someone doesn’t scan before pouring their beer it’ll just log it as &lt;strong&gt;Anonymous&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;The query for this data is simple:&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SELECT
+  time AS &quot;time&quot;,
+  consumer AS &quot;Guest&quot;,
+  oz_poured AS &quot;Beer Consumed&quot;
+FROM beer_log
+WHERE
+  $_timeFilter
+ORDER BY time
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;I also chose to display this data in a table and used built in data transformation tools to calculate the sum of all oz poured grouped by the consumer. Then I sort by descending to show the most beer consumed at the top!&lt;/p&gt;
+
+&lt;p&gt;You’ll notice the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;WHERE&lt;/code&gt; clause has a variable &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$_timeFilter&lt;/code&gt;. Perhaps my favorite feature in Grafana is the ability to filter data by time (assuming you log date/time in the tables). Instead of having multiple leaderboard dashboards that show daily, 1 month, 3 month, etc. Grafana’s built in time filter allows you to specify a day (or date range) for the data. If I set the date range to &lt;strong&gt;&lt;em&gt;Today&lt;/em&gt;&lt;/strong&gt;, the leaderboard will only reflect oz poured today!&lt;/p&gt;
+
+&lt;p&gt;I made a table and a few pie charts to visualize the leaderboard:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/posts/20220924-visualization/viz03.png&quot; alt=&quot;Leaderboard&quot; class=&quot;center&quot; width=&quot;100%&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;lessons-learned--future-plans&quot;&gt;Lessons Learned &amp;amp; Future Plans&lt;/h1&gt;
+
+&lt;p&gt;This project changed so many times over the course of development. I’ve changed database providers (started with mongo, switched to MySQL), modified what data I actually wanted to record, decided to pursue Grafana instead of building my own web interface, etc. The biggest lesson here is to be flexible. While it was time consuming and a little frustrating to overhaul the code once or twice, it was still fun and educational. It’s important to be able to course correct and leverage the best options for tools! I do feel like I pre-planned &lt;em&gt;enough&lt;/em&gt;; the database change really only started because I decided to use Grafana and there was no self-hosted option for interfacing with mongoDB. I know MySQL fairly well so I fell back to that and was able to get that going quickly.&lt;/p&gt;
+
+&lt;p&gt;I’ve really enjoyed working with Grafana, so I want to expand what I am using it for. While beer statistics are important, I would like to start sending monitoring data for my Synology, my Home Assistant server, and Ubiquiti gear. I’m sure I will follow-up on here once I get a few more data sources added!&lt;/p&gt;</content><author><name>Joe Pecsi</name></author><summary type="html">Oh look, data!</summary></entry><entry><title type="html">Beer Management</title><link href="http://0.0.0.0:4000/2022/09/01/kegwatch.html" rel="alternate" type="text/html" title="Beer Management" /><published>2022-09-01T00:00:00+00:00</published><updated>2022-09-01T00:00:00+00:00</updated><id>http://0.0.0.0:4000/2022/09/01/kegwatch</id><content type="html" xml:base="http://0.0.0.0:4000/2022/09/01/kegwatch.html">&lt;h1 id=&quot;i-like-beer&quot;&gt;I like beer…&lt;/h1&gt;
 
 &lt;p&gt;When we moved into our house 2 years ago, my wife bought me a kegerator as an anniversary gift. It has been a blast having different beers on rotation at the house, playing with custom tap handles, and having draught beer whenever I want. However, one of the most annoying things about using kegs is not knowing how much beer is left. Anyone that has a kegerator knows that dreaded feeling when half way through pouring a beer a blast of foam and air come shooting out of the faucet, or, when you’re about to host people and have no clue if there is enough beer left to get everyone through the night! That’s what inspired this project.&lt;/p&gt;
 
