@@ -138,8 +138,6 @@
     <p class="page-description">My pellet monitoring system for pellet smokers!</p>
     
     
-    <span class="page-label">GitHub Project</span>
-    
   </div>
 
   
@@ -149,7 +147,7 @@
   
 
   <div class="page__content">
-    <p>Similarly to KegWatch, HopperHawk (creativity points to my friend Teagan for coming up with the name) was born out of a need from one of my many hobbies…smoking meat! I personally have a pellet smoker and sometimes on those long smokes I fall asleep or forget to check my hopper to make sure I still have enough pellets. Some smokers actually include pellet monitoring as a feature, and Traeger sells a pretty expensive add-on that you can buy.</p>
+    <p>Similarly to KegWatch, HopperHawk (creativity points to my friend Teagan for coming up with the name) was born out of a need from one of my many hobbies…smoking meat! I personally have a pellet smoker and sometimes on those long overnight smokes it is hard to gauge if there are enough pellets in the hopper. Some smokers actually include pellet monitoring as a feature, and Traeger sells a pretty expensive add-on that you can buy.</p>
 
 <p>I was already in the process of working on KegWatch and decided to build my own hopper monitor to practice my (very very amateur) EE skills. HopperHawk is designed to sit inside of your hopper either on top of the grid (if you left it installed) or on the inside lid (attaches magnetically). Based around the ESP32, HopperHawk is a custom designed PCB that contains a lithium-ion battery and an ultrasonic sensor (to do the actual measurement).</p>
 
@@ -169,7 +167,7 @@
 <p>I used HopperHawk as a chance to try designing my own PCB so I went all in by designing a board based around the ESP32, a few LEDs for power/charging indication, and the MCP73871 battery management IC. The board holds a Lithium Ion 18650 battery and can charge, do load sharing, or be powered from USB alone. First few tests with the battery went really well, over 24 hours of operation on a full charge with measurements being done every 5 minutes!</p>
 
 <h3 id="software">Software</h3>
-<p>A lot of work still to be done here, everything is written in micropython and I actually have an API on the board itself so that you can configure it or query it on the network. For status updates I am using MQTT to push to Home Assistant.</p>
+<p>A lot of work still to be done here, everything is written in micropython and I actually have an API on the board itself so you can configure it or query it on the network. For status updates I am using MQTT to push to Home Assistant.</p>
 
 <div class="page__gallery__wrapper">
   <div class="page__gallery__images">
