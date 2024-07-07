@@ -6,22 +6,22 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Joe Pecsi</title>
-  <meta name='description' content='A repository of technical rambling'>
+  <title>HopperHawk</title>
+  <meta name='description' content='My pellet monitoring system for pellet smokers!'>
 
-  <link rel="canonical" href="https://joepecsi.com/">
+  <link rel="canonical" href="https://joepecsi.com/projects/hopperhawk">
   <link rel="alternate" type="application/rss+xml" title="Joe Pecsi" href="/feed.xml">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Joe Pecsi">
-  <meta name="twitter:description" content="A repository of technical rambling">
-  <meta name="twitter:image:src" content="https://joepecsi.com/images/01.jpg">
+  <meta name="twitter:title" content="HopperHawk – Joe Pecsi">
+  <meta name="twitter:description" content="My pellet monitoring system for pellet smokers!">
+  <meta name="twitter:image:src" content="https://joepecsi.com/images/projects/hopperhawk/cover.jpg">
 
   <!-- Facebook OpenGraph -->
-  <meta property="og:title" content="Joe Pecsi">
-  <meta property="og:description" content="A repository of technical rambling">
-  <meta property="og:image" content="https://joepecsi.com/images/01.jpg">
+  <meta property="og:title" content="HopperHawk – Joe Pecsi">
+  <meta property="og:description" content="My pellet monitoring system for pellet smokers!">
+  <meta property="og:image" content="https://joepecsi.com/images/projects/hopperhawk/cover.jpg">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -57,49 +57,9 @@
   
 
   
-  <div class="global-cover">
-    <img src="/images/home.jpg" alt="Joe Pecsi">
-  </div>
-  
 
   <div class="global-content">
 
-    
-      <!-- begin author -->
-<section class="author">
-  <div class="container">
-    <div class="row">
-      <div class="col col-12">
-
-        <div class="author__box with-global-cover">
-          <div class="author__info">
-            <div class="author__meta">
-              
-              <a href="/about" class="author__avatar">
-                <img src="/images/joe.jpg" alt="Joe Pecsi">
-              </a>
-              
-
-              
-              <h1 class="author__name"><a href="/about">Joe Pecsi</a></h1>
-              
-
-              
-              <span class="author__role">Information Security & Assurance</span>
-              
-            </div>
-            
-          </div>
-          
-          <p class="author__bio">I'm a passionate cyber security professional with over a decade of experience in Information Security & Assurance, Systems Architecture, IT Management, Software Development, Networking, and Virtualization. I plan on using this site as a place to showcase my projects and share insights through my blog. Thanks for stopping by, be sure to check in for new content!</p>
-          
-        </div>
-
-      </div>
-    </div>
-  </div>
-</section>
-<!-- end author -->
     
 
     <!-- begin header -->
@@ -111,7 +71,7 @@
           <ul class="nav__list list-reset dragscroll">
             
             <li class="nav__item">
-              <a href="/" class="nav__link active-link">🏠 Home</a>
+              <a href="/" class="nav__link">🏠 Home</a>
             </li>
             
             <li class="nav__item">
@@ -139,99 +99,131 @@
 <!-- end header -->
 
     
-
-    <!-- begin content -->
-    <main class="content with-breadcrumbs" aria-label="Content">
       
-<!-- begin projects -->
-<section class="section projects">
+
+<div class="breadcrumbs">
   <div class="container">
     <div class="row">
       <div class="col col-12">
-        <div class="container__inner">
+        <a href="/">Home</a>
+        
+        
+          
+          
+        
+          
+          
+            » <a href='/projects/'>Projects</a>
+          
+        
+          
+          
+            » <a href='/projects/hopperhawk/'>Hopperhawk</a>
+          
+        
+      </div>
+    </div>
+  </div>
+</div>
+    
 
-          <div class="section__info">
-            <div class="section__head">
-              <h2 class="section__title"><i class="fa-solid fa-rocket"></i> Projects</h2>
-              <a class="section__link" href="/projects">View all <i class="fa-solid fa-arrow-right-long"></i></a>
-            </div>
+    <!-- begin content -->
+    <main class="content with-breadcrumbs" aria-label="Content">
+      <!-- begin page -->
+<article class="page container">
+
+  <div class="page-head">
+    <h1 class="page-title">HopperHawk</h1>
+    
+    <p class="page-description">My pellet monitoring system for pellet smokers!</p>
+    
+    
+    <span class="page-label">GitHub Project</span>
+    
+  </div>
+
+  
+  <div class="page-image">
+    <img class="lazy" data-src="/images/projects/hopperhawk/cover.jpg" alt="HopperHawk">
+  </div>
+  
+
+  <div class="page__content">
+    <p>Similarly to KegWatch, HopperHawk (creativity points to my friend Teagan for coming up with the name) was born out of a need from one of my many hobbies…smoking meat! I personally have a pellet smoker and sometimes on those long smokes I fall asleep or forget to check my hopper to make sure I still have enough pellets. Some smokers actually include pellet monitoring as a feature, and Traeger sells a pretty expensive add-on that you can buy.</p>
+
+<p>I was already in the process of working on KegWatch and decided to build my own hopper monitor to practice my (very very amateur) EE skills. HopperHawk is designed to sit inside of your hopper either on top of the grid (if you left it installed) or on the inside lid (attaches magnetically). Based around the ESP32, HopperHawk is a custom designed PCB that contains a lithium-ion battery and an ultrasonic sensor (to do the actual measurement).</p>
+
+<h2 id="how-it-works">How it works</h2>
+
+<h3 id="hardware">Hardware</h3>
+<p>This was a fun and frustrating project to build. I started using an ultrasonic sensor, which worked perfectly in bench tests. The minute I placed the sensor inside the hopper of my smoker the measurements were all over the place. They were also wildly inconsistent, I tried several times to correct for this programmatically but it just wasn’t going to work. I noticed that if the smoker was off, the readings would be stable so my best guess is either the vibration or noise from the auger motor in the hopper was enough to throw off the ultrasonic sensor. I swapped the ultrasonic sensor out for a TOF10120 laser based range sensor and the system stabilized immediately. All of my tests have gone incredibly well, and it’s become quite reliable.</p>
+
+<div class="page__gallery__wrapper">
+  <div class="page__gallery__images">
+    <img src="/images/projects/hopperhawk/01.jpg" loading="lazy" alt="Schematic" />
+    <img src="/images/projects/hopperhawk/05.jpg" loading="lazy" alt="Prototype" />
+  </div>
+    <em>HopperHawk Hardware</em>
+</div>
+
+<p>I used HopperHawk as a chance to try designing my own PCB so I went all in by designing a board based around the ESP32, a few LEDs for power/charging indication, and the MCP73871 battery management IC. The board holds a Lithium Ion 18650 battery and can charge, do load sharing, or be powered from USB alone. First few tests with the battery went really well, over 24 hours of operation on a full charge with measurements being done every 5 minutes!</p>
+
+<h3 id="software">Software</h3>
+<p>A lot of work still to be done here, everything is written in micropython and I actually have an API on the board itself so that you can configure it or query it on the network. For status updates I am using MQTT to push to Home Assistant.</p>
+
+<div class="page__gallery__wrapper">
+  <div class="page__gallery__images">
+    <img src="/images/projects/hopperhawk/02.jpg" loading="lazy" alt="Home Assistant Card" />
+    <img src="/images/projects/hopperhawk/04.jpg" loading="lazy" alt="Web Dashboard" />
+    <img src="/images/projects/hopperhawk/03.jpg" loading="lazy" alt="Home Assistant Card" />
+  </div>
+    <em>HopperHawk Interfacing</em>
+</div>
+
+<p>I have been toying around with a mobile app and web interface, but am starting to run into issues due to using micropython on the esp32. I would like to implement a web server that works over HTTPS, but the esp32 keeps running out of memory. My goal is to learn and swap over to esp-idf for this project to get that working (then I would consider selling these things if people were interested).</p>
+
+<h2 id="whats-next">What’s next?</h2>
+<p>I have a lot of ideas for this project still and although I haven’t had a chance to work on it as much lately…I hope to keep adding things here and there, maybe even making it available for sale one day. As I work on it I will continue to provide updates on my blog, so be sure to follow!</p>
+
+<p><a href="https://github.com/jpecsi/hopperhawk">Here is the project on GitHub!</a></p>
+
+  </div>
+
+
+
+  <div class="section-related">
+    <h4 class="section-related__title">Discover more...</h4>
+    <div class="row">
+      
+      
+      
+      
+      <article class="project col col-6 col-t-12">
+        <div class="project__content">
+          <div class="project__info">
+            <h3 class="project__title"><a href="/projects/kegwatch">KegWatch</a></h3>
+            
+            <div class="project__description">My keg monitoring and beer analytics system!</div>
             
           </div>
-
-          <div class="row">
-            
-            
-            <article class="project col col-6 col-t-12 animate">
-              <div class="project__content">
-                <div class="project__info">
-                  <h3 class="project__title"><a href="/projects/kegwatch">KegWatch</a></h3>
-                  
-                    <div class="project__description">My keg monitoring and beer analytics system!</div>
-                  
-                </div>
-                
-                <a href="/projects/kegwatch" class="project__image">
-                  <img class="lazy" data-src="/images/projects/kegwatch/cover.jpg" alt="KegWatch">
-                </a>
-                
-              </div>
-            </article>
-            
-            <article class="project col col-6 col-t-12 animate">
-              <div class="project__content">
-                <div class="project__info">
-                  <h3 class="project__title"><a href="/projects/hopperhawk">HopperHawk</a></h3>
-                  
-                    <div class="project__description">My pellet monitoring system for pellet smokers!</div>
-                  
-                </div>
-                
-                <a href="/projects/hopperhawk" class="project__image">
-                  <img class="lazy" data-src="/images/projects/hopperhawk/cover.jpg" alt="HopperHawk">
-                </a>
-                
-              </div>
-            </article>
-            
-          </div>
-
+          
+          <a href="/projects/kegwatch" class="project__image">
+            <img class="lazy" data-src="/images/projects/kegwatch/cover.jpg" alt="KegWatch">
+          </a>
+          
         </div>
-      </div>
+      </article>
+      
+      
+      
+      
+      
+      
     </div>
   </div>
 
-</section>
-<!-- end projects -->
-
-
-
-
-
-<!-- begin blog -->
-<section class="section blog">
-  <div class="container">
-
-    <div class="section__info">
-      <div class="section__head">
-        <h2 class="section__title"><i class="fa-solid fa-pencil"></i> Blog</h2>
-        <a class="section__link" href="/blog">View all <i class="fa-solid fa-arrow-right-long"></i></a>
-      </div>
-      
-    </div>
-
-    <div class="grid animate">
-      
-    </div>
-
-  </div>
-
-</section>
-<!-- end blog -->
-
-
-
-
-
+</article>
+<!-- end page -->
     </main>
     <!-- end content -->
 

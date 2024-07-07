@@ -6,22 +6,22 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Joe Pecsi</title>
-  <meta name='description' content='A repository of technical rambling'>
+  <title>KegWatch</title>
+  <meta name='description' content='My keg monitoring and beer analytics system!'>
 
-  <link rel="canonical" href="https://joepecsi.com/">
+  <link rel="canonical" href="https://joepecsi.com/projects/kegwatch">
   <link rel="alternate" type="application/rss+xml" title="Joe Pecsi" href="/feed.xml">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Joe Pecsi">
-  <meta name="twitter:description" content="A repository of technical rambling">
-  <meta name="twitter:image:src" content="https://joepecsi.com/images/01.jpg">
+  <meta name="twitter:title" content="KegWatch – Joe Pecsi">
+  <meta name="twitter:description" content="My keg monitoring and beer analytics system!">
+  <meta name="twitter:image:src" content="https://joepecsi.com/images/projects/kegwatch/cover.jpg">
 
   <!-- Facebook OpenGraph -->
-  <meta property="og:title" content="Joe Pecsi">
-  <meta property="og:description" content="A repository of technical rambling">
-  <meta property="og:image" content="https://joepecsi.com/images/01.jpg">
+  <meta property="og:title" content="KegWatch – Joe Pecsi">
+  <meta property="og:description" content="My keg monitoring and beer analytics system!">
+  <meta property="og:image" content="https://joepecsi.com/images/projects/kegwatch/cover.jpg">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -57,49 +57,9 @@
   
 
   
-  <div class="global-cover">
-    <img src="/images/home.jpg" alt="Joe Pecsi">
-  </div>
-  
 
   <div class="global-content">
 
-    
-      <!-- begin author -->
-<section class="author">
-  <div class="container">
-    <div class="row">
-      <div class="col col-12">
-
-        <div class="author__box with-global-cover">
-          <div class="author__info">
-            <div class="author__meta">
-              
-              <a href="/about" class="author__avatar">
-                <img src="/images/joe.jpg" alt="Joe Pecsi">
-              </a>
-              
-
-              
-              <h1 class="author__name"><a href="/about">Joe Pecsi</a></h1>
-              
-
-              
-              <span class="author__role">Information Security & Assurance</span>
-              
-            </div>
-            
-          </div>
-          
-          <p class="author__bio">I'm a passionate cyber security professional with over a decade of experience in Information Security & Assurance, Systems Architecture, IT Management, Software Development, Networking, and Virtualization. I plan on using this site as a place to showcase my projects and share insights through my blog. Thanks for stopping by, be sure to check in for new content!</p>
-          
-        </div>
-
-      </div>
-    </div>
-  </div>
-</section>
-<!-- end author -->
     
 
     <!-- begin header -->
@@ -111,7 +71,7 @@
           <ul class="nav__list list-reset dragscroll">
             
             <li class="nav__item">
-              <a href="/" class="nav__link active-link">🏠 Home</a>
+              <a href="/" class="nav__link">🏠 Home</a>
             </li>
             
             <li class="nav__item">
@@ -139,99 +99,176 @@
 <!-- end header -->
 
     
-
-    <!-- begin content -->
-    <main class="content with-breadcrumbs" aria-label="Content">
       
-<!-- begin projects -->
-<section class="section projects">
+
+<div class="breadcrumbs">
   <div class="container">
     <div class="row">
       <div class="col col-12">
-        <div class="container__inner">
+        <a href="/">Home</a>
+        
+        
+          
+          
+        
+          
+          
+            » <a href='/projects/'>Projects</a>
+          
+        
+          
+          
+            » <a href='/projects/kegwatch/'>Kegwatch</a>
+          
+        
+      </div>
+    </div>
+  </div>
+</div>
+    
 
-          <div class="section__info">
-            <div class="section__head">
-              <h2 class="section__title"><i class="fa-solid fa-rocket"></i> Projects</h2>
-              <a class="section__link" href="/projects">View all <i class="fa-solid fa-arrow-right-long"></i></a>
-            </div>
+    <!-- begin content -->
+    <main class="content with-breadcrumbs" aria-label="Content">
+      <!-- begin page -->
+<article class="page container">
+
+  <div class="page-head">
+    <h1 class="page-title">KegWatch</h1>
+    
+    <p class="page-description">My keg monitoring and beer analytics system!</p>
+    
+    
+    <span class="page-label">GitHub Project</span>
+    
+  </div>
+
+  
+  <div class="page-image">
+    <img class="lazy" data-src="/images/projects/kegwatch/cover.jpg" alt="KegWatch">
+  </div>
+  
+
+  <div class="page__content">
+    <p>One of the first things we bought when we bought our first home was a kegerator (you know, the essentials). Aside from the near-year long journey it took to actually get it balanced and working properly, it’s been an absolute blast having it - especially for parties. Although, after hosting our first few events in the house I realized one bad thing about the kegerator…I never knew how much beer I had left.</p>
+
+<p>Realistically, I could open the door up and pick the keg up to estimate how full it was but that just wasn’t a good enough answer. I thought it would be awesome to have something I could integrate into my Home Assistant dashboard so I started doing some research (hoping to avoid re-inventing the wheel). Surprisingly, there were very few options available geared toward home users vs commercial bars. The only slightly promising solution was a product that was sold as a smart keg scale but it had so many downsides like cost (had to buy one per keg and mine is a two tap kegerator) and size (too tall for my kegerator). I even explored a few commercial options that used flow rate sensors in the beer lines, but they got crazy expensive and were not as open for development. The logical next step was to just build my own!</p>
+
+<p>Based on my research, there were two ways to go about tracking beer: <em>weight</em> or <em>flow</em>.</p>
+
+<h4 id="weight">Weight</h4>
+
+<p>This should be the simplest solution! Get the weight of an empty keg and a full keg, take the difference, and estimate the amount of beer left. The following issues arose:</p>
+
+<p><strong>Drift</strong>: I looked into using load cells to build a scale, but the cells drift over time. I was fairly confident I could counteract this programmatically, but even if I could, space becomes a concern.</p>
+
+<p><strong>Space</strong>: I don’t have the vertical space in my kegerator to lift the kegs more than an inch or so. This means I would have to build an impossibly thin scale and deal with the challenges of swapping kegs in and out with reduced headroom.</p>
+
+<p><strong>Temperature</strong>: Adding a scale inside the refrigeration unit would require drilling a hole to run wires out the back or through the door. Not only does this look terrible, but it could also affect temperature control.</p>
+
+<h4 id="flow">Flow</h4>
+<p>There are two ways to measure flow: the physical addition of flow rate sensors into the beer line or measuring the time the tap handle is open to estimate flow rate. The flow rate sensors present the following concerns:</p>
+
+<p><strong>Price</strong>: The most commonly used sensors (for this application) are food-grade and reliable but are quite expensive. I was aiming to keep the cost down overall.</p>
+
+<p><strong>Change</strong>: It took me a very long time to balance my draft system. I spent a year or so battling flat, foamy, and warm beer so the thought of making unnecessary changes to my beer lines freaked me out.</p>
+
+<p><strong>Temperature (Again)</strong>: Adding components inside the refrigeration unit would require drilling a hole to run wires out the back or through the door. Not only does this look terrible, but it could also affect temperature control.</p>
+
+<h4 id="my-solution">My Solution</h4>
+<p><strong><em>Time.</em></strong> A draft setup is a closed system with fixed pressure applied constantly. As you pour beer it draws from the bottom of the keg and the head space in the keg is replaced with CO2. Assuming you have a well balanced configuration and a decent CO2 regulator, you should generally have a consistent pour rate from the time a keg is tapped to the minute it kicks.</p>
+
+<p>Enter, KegWatch. As you can tell from above, my biggest concern with other keg monitoring products was adding electronics and components inside the kegerator. I wanted something simple and unobtrusive that wouldn’t interfere with the beer itself. I designed KegWatch as a self-contained box that sits on top of the beer tower and uses sensors and magnets to track the state of the tap handles. After an initial calibration it will (with a decent level of accuracy) track every beer that is poured!</p>
+
+<div class="page__gallery__wrapper">
+  <div class="page__gallery__images">
+    <img src="/images/projects/kegwatch/05.jpg" loading="lazy" alt="Initial test" />
+  </div>
+    <em>First KegWatch Test</em>
+</div>
+
+<p>Once I had the hardware and basic functionality working, it really snowballed into a massive project that included dashboards, beer tracking, beer statistics, and even user statistics.</p>
+
+<h2 id="how-it-works">How it works</h2>
+
+<h3 id="hardware">Hardware</h3>
+<p>I started with reed switches inside the KegWatch box and magnets mounted on the back of the tap handles. It started out ok on bench tests, but was so unstable in reality. Frequently I would find that beer was “pouring” overnight because of some sort of interference with the reed sensor, or if the tap handle didn’t close just enough it would remain open (digitally).</p>
+
+<p>I scrapped that and moved to hall sensors like the A3144. This was much more reliable because it was based on magnetic field detection over a physical/mechanical magnetic latch. As long as the magnet was in range it would trigger open/closed. I spent months using this method, and even had it reporting relatively accurately; for example at the end of a 660oz. keg the system was only off by 10oz.</p>
+
+<div class="page__gallery__wrapper">
+  <div class="page__gallery__images">
+    <img src="/images/projects/kegwatch/01.jpg" loading="lazy" alt="Breadboard Circuit" />
+    <img src="/images/projects/kegwatch/04.jpg" loading="lazy" alt="Protoype PCB" />
+    <img src="/images/projects/kegwatch/02.jpg" loading="lazy" alt="Built Hardware" />
+  </div>
+    <em>KegWatch Hardware Samples</em>
+</div>
+
+<p>The biggest problem I had with accuracy is the fact that these hall sensors just report open/close once a magnet is in or out of range. Turns out some people pour beer slower than others and that was really impacting my numbers. Friends would either not open the tap all the way, or pull it open too slow so the system would miss the first ounce (ish) of beer. That doesn’t sound like much, but if you pour 50 beers…it adds up.</p>
+
+<p>My final solution, still using hall sensors, is to switch to a linear hall sensor. A linear hall sensor (e.g. SS49E) has an analog output that essentially represents the distance of a magnet (just in voltage). The closer a magnet is to the sensor, the higher the output will be. By using this type of sensor, I can actually measure how far away the tap handle is versus is it open/closed. This is still a work in progress, but, ideally it should allow me to better represent how much beer is being poured if I can account for things like the tap being fully open, partially open and producing more foam, etc.</p>
+
+<h3 id="software">Software</h3>
+<p>I love data, and I also love beer…so naturally after creating my KegWatch sensor it was time to get some sweet sweet data.</p>
+
+<p>As it stands now, KegWatch is written in micropython (I know there are better options, but I know Python and this was the quickest path for prototyping). In the very beginning I was using Python on a Raspberry Pi and a MySQL Python module to communicate directly to a database (also hosted on the Pi), but I graduated a bit from that. I’ve moved over to embedded hardware (esp32) and micropython for the sensor code and built an API service that runs via Docker for database communication. I’m still using MySQL as the backend database, but again that’s just because of my existing comfort level and this <em>is</em> a personal project.</p>
+
+<p>This system has turned into a full on keg management platform simply due to the fact that every time I wanted to visualize data I needed more information, so I would add it to the database. Everytime a new keg gets tapped, you add it to the system and provide information like the tap number, beer name, size, and ABV. A UUID is generated along with the current date/time and it is logged as a new keg. Everytime a beer is poured it’ll reference the keg ID and keep subtracting until it thinks the keg is kicked. Once the keg hits 0oz the system automatically kicks the keg, disables the tap, and adds the date/time.</p>
+
+<p>To take it a step further, I thought it would be fun to track who was drinking beer. I’ve gone through a few iterations of this as well but it is all based around the same concept - using barcodes or QR codes and a scanner to tag beers to people. The KegWatch hardware uses a small QR code scanner and before someone pours a beer they either scan their cup or the QR code on a mobile site I built to tie the beer to them.</p>
+
+<div class="page__gallery__wrapper">
+  <div class="page__gallery__images">
+    <img src="/images/projects/kegwatch/03.jpg" loading="lazy" alt="Grafana Dashboard" />
+  </div>
+    <em>Grafana Dashboard</em>
+</div>
+
+<p>Using Grafana I can visualize all sorts of things like who drank the most, which beer gets consumed the quickest, and how much beer is actually left.</p>
+
+<h2 id="whats-next">What’s next?</h2>
+<p>I have a lot of ideas for this project still and although I haven’t had a chance to work on it as much lately…I hope to keep adding things here and there, maybe even making it available for sale one day. As I work on it I will continue to provide updates on my blog, so be sure to follow!</p>
+
+<p><a href="https://github.com/jpecsi/kegwatch">Here is the project on GitHub!</a></p>
+
+
+  </div>
+
+
+
+  <div class="section-related">
+    <h4 class="section-related__title">Discover more...</h4>
+    <div class="row">
+      
+      
+      
+      
+      
+      
+      <article class="project col col-6 col-t-12">
+        <div class="project__content">
+          <div class="project__info">
+            <h3 class="project__title"><a href="/projects/hopperhawk">HopperHawk</a></h3>
+            
+            <div class="project__description">My pellet monitoring system for pellet smokers!</div>
             
           </div>
-
-          <div class="row">
-            
-            
-            <article class="project col col-6 col-t-12 animate">
-              <div class="project__content">
-                <div class="project__info">
-                  <h3 class="project__title"><a href="/projects/kegwatch">KegWatch</a></h3>
-                  
-                    <div class="project__description">My keg monitoring and beer analytics system!</div>
-                  
-                </div>
-                
-                <a href="/projects/kegwatch" class="project__image">
-                  <img class="lazy" data-src="/images/projects/kegwatch/cover.jpg" alt="KegWatch">
-                </a>
-                
-              </div>
-            </article>
-            
-            <article class="project col col-6 col-t-12 animate">
-              <div class="project__content">
-                <div class="project__info">
-                  <h3 class="project__title"><a href="/projects/hopperhawk">HopperHawk</a></h3>
-                  
-                    <div class="project__description">My pellet monitoring system for pellet smokers!</div>
-                  
-                </div>
-                
-                <a href="/projects/hopperhawk" class="project__image">
-                  <img class="lazy" data-src="/images/projects/hopperhawk/cover.jpg" alt="HopperHawk">
-                </a>
-                
-              </div>
-            </article>
-            
-          </div>
-
+          
+          <a href="/projects/hopperhawk" class="project__image">
+            <img class="lazy" data-src="/images/projects/hopperhawk/cover.jpg" alt="HopperHawk">
+          </a>
+          
         </div>
-      </div>
+      </article>
+      
+      
+      
+      
     </div>
   </div>
 
-</section>
-<!-- end projects -->
-
-
-
-
-
-<!-- begin blog -->
-<section class="section blog">
-  <div class="container">
-
-    <div class="section__info">
-      <div class="section__head">
-        <h2 class="section__title"><i class="fa-solid fa-pencil"></i> Blog</h2>
-        <a class="section__link" href="/blog">View all <i class="fa-solid fa-arrow-right-long"></i></a>
-      </div>
-      
-    </div>
-
-    <div class="grid animate">
-      
-    </div>
-
-  </div>
-
-</section>
-<!-- end blog -->
-
-
-
-
-
+</article>
+<!-- end page -->
     </main>
     <!-- end content -->
 
