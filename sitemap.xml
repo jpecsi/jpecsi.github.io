@@ -2,19 +2,23 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>https://joepecsi.com/about/</loc>
-<lastmod>2024-07-07T11:53:18-04:00</lastmod>
+<lastmod>2024-07-09T16:53:58-04:00</lastmod>
 </url>
 <url>
 <loc>https://joepecsi.com/contact/</loc>
-<lastmod>2024-07-07T11:53:18-04:00</lastmod>
+<lastmod>2024-07-09T16:53:58-04:00</lastmod>
 </url>
 <url>
 <loc>https://joepecsi.com/elements/</loc>
-<lastmod>2024-07-07T11:53:18-04:00</lastmod>
+<lastmod>2024-07-09T16:53:58-04:00</lastmod>
 </url>
 <url>
 <loc>https://joepecsi.com/tags/</loc>
-<lastmod>2024-07-07T11:53:18-04:00</lastmod>
+<lastmod>2024-07-09T16:53:58-04:00</lastmod>
+</url>
+<url>
+<loc>https://joepecsi.com/blog/building-my-homelab</loc>
+<lastmod>2024-07-09T00:00:00-04:00</lastmod>
 </url>
 <url>
 <loc>https://joepecsi.com/projects/hopperhawk</loc>

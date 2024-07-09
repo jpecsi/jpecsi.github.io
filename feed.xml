@@ -5,9 +5,78 @@
         <description>A repository of technical rambling</description>
         <link>https://joepecsi.com/</link>
         <atom:link href="https://joepecsi.com/feed.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Sun, 07 Jul 2024 11:53:18 -0400</pubDate>
-        <lastBuildDate>Sun, 07 Jul 2024 11:53:18 -0400</lastBuildDate>
+        <pubDate>Tue, 09 Jul 2024 16:53:58 -0400</pubDate>
+        <lastBuildDate>Tue, 09 Jul 2024 16:53:58 -0400</lastBuildDate>
         <generator>Jekyll v4.3.3</generator>
+        
+            <item>
+                <title>The Cyber Sandbox - Creating a Home Lab for Endless Exploration</title>
+                <description>&lt;p&gt;When I was in college our professors always made it a point to warn us that our field was constantly changing and would require a lot of continuous learning. I remember feeling confident and had no worries at all because I could not imagine a world where I wasn’t in the know on the latest technologies. Back then I was constantly tinkering, reading, and building something that kept me involved in everything from software development to infrastructure.&lt;/p&gt;
+
+&lt;p&gt;Fast forward 10 years and now I’ll hear developers or engineers talk about things I have never even heard of! Turns out as you get older it gets harder and harder to keep up on all of the cool new things if they aren’t directly related to your day job. The only thing in my way is me, so I decided to put some spare hardware to use and build out my home lab.&lt;/p&gt;
+
+&lt;h2 id=&quot;hardware&quot;&gt;Hardware&lt;/h2&gt;
+&lt;p&gt;When I first got into home labs I was all about hardware, I wanted a rack with multiple servers churning away, and all the blinking lights. Now my goal is as much power in as small a package as possible, and I think I have achieved that with my current setup.&lt;/p&gt;
+
+&lt;div class=&quot;page__gallery__wrapper&quot;&gt;
+  &lt;div class=&quot;page__gallery__images&quot;&gt;
+    &lt;img src=&quot;/images/blog/2024/07/09/proxmox.png&quot; loading=&quot;lazy&quot; alt=&quot;Proxmox Summary&quot; /&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;specs&quot;&gt;Specs&lt;/h4&gt;
+&lt;div class=&quot;table-container&quot;&gt;
+  &lt;table&gt;
+    &lt;tr&gt;&lt;th&gt;Hardware&lt;/th&gt;&lt;th&gt;Specification&lt;/th&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Motherboard&lt;/td&gt;&lt;td&gt;Supermicro X10SDV-8C-TLN4f+&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;CPU&lt;/td&gt;&lt;td&gt;Intel Xeon D-1537 (8c/16t)&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;RAM&lt;/td&gt;&lt;td&gt;128 GB (ECC)&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Storage&lt;/td&gt;&lt;td&gt;1TB NVMe&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;OS&lt;/td&gt;&lt;td&gt;Proxmox VE 8.2.2&lt;/td&gt;&lt;/tr&gt;
+  &lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This is the first time I will be diving deep into Proxmox as I used to be a die-hard VMware user. I started my career learning ESXi 5.X and deploying HA clusters with vCenter, distributed switching, etc. and I spent years learning everything I could about VMware’s hypervisor products (I even wanted to work for them some day); after the recent events with Broadcom though, I have definitely shifted away from that. Proxmox is also incredibly capable and feature rich for being free so I am excited to get more hands on time with it.&lt;/p&gt;
+
+&lt;h2 id=&quot;planning&quot;&gt;Planning&lt;/h2&gt;
+&lt;p&gt;I am treating this lab environment like any other system by thinking through goals and projects (requirements), design, and resource allocation. Even though I am the only one that will access it, I am also going to be thorough in my documentation. My home lab should be something that helps me improve my skills all around so I don’t want to get lazy or take shortcuts. I’ve started jotting down some initial plans and estimating resource allocation for the core services/design of the lab to get started.&lt;/p&gt;
+
+&lt;div class=&quot;page__gallery__wrapper&quot;&gt;
+  &lt;div class=&quot;page__gallery__images&quot;&gt;
+    &lt;img src=&quot;/images/blog/2024/07/09/planning.png&quot; loading=&quot;lazy&quot; alt=&quot;Schematic&quot; /&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;I won’t hold myself to it or force myself through a change control process (I wanted to be thorough, not hate myself) because at the end of the day this is a lab and I anticipate things will constantly change and evolve. The foundation of the environment should remain relatively stable, however, to support the rest of the lab (authentication, DNS, etc.).&lt;/p&gt;
+
+&lt;h2 id=&quot;projects-and-goals&quot;&gt;Projects and Goals&lt;/h2&gt;
+
+&lt;div class=&quot;table-container&quot;&gt;
+  &lt;table&gt;
+    &lt;tr&gt;&lt;th&gt;Project&lt;/th&gt;&lt;th&gt;Why&lt;/th&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Deploy a SIEM&lt;/td&gt;&lt;td&gt;I’ve worked a little with SIEMs in the past, but I haven’t spent time deploying and configuring one so this is an important exercise&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Deploy k8s&lt;/td&gt;&lt;td&gt;Kubernetes is increasing in adoption and admittedly my knowledge of containerization stops at Docker. I am excited to dive deep into k8s&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Implement Ansible/Terraform&lt;/td&gt;&lt;td&gt;With the world moving into containerized workloads and cloud based environments, infrastructure as code plays a huge role in rapid deployment. I have no experience here and it’ll be valuable also from a security perspective to understand the threat landscape&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Implement Zero Trust&lt;/td&gt;&lt;td&gt;I understand it from a technical/architecture perspective, I have used it, but I have never designed and implemented it. This one is more for fun just to get hands on&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;NIST 800-171 Compliance&lt;/td&gt;&lt;td&gt;This one is a little crazy, I get that, especially because in most of my career roles this is what I invest a lot of time on. My goal here is to get as close to a perfect score on the 800-171 assessment as possible and build out templates to share for control tracking, SSPs, policies, etc.&lt;/td&gt;&lt;/tr&gt;
+  &lt;/table&gt;
+&lt;/div&gt;
+
+&lt;p&gt; &lt;/p&gt;
+
+&lt;h2 id=&quot;whats-next&quot;&gt;What’s next?&lt;/h2&gt;
+&lt;p&gt;As of now, the hardware is assembled in a nice little case, Proxmox has been installed, and I have done some basic initial setup. Next I need to deploy OPNsense and configure the virtual networks and then build out my domain controllers and configure Active Directory. I think my first project will be deploying Wazuh to get my SIEM/XDR up and running. I plan on making posts along the way so be sure to check back in!&lt;/p&gt;
+
+&lt;p&gt; &lt;/p&gt;
+</description>
+                <pubDate>Tue, 09 Jul 2024 00:00:00 -0400</pubDate>
+                <link>https://joepecsi.com/blog/building-my-homelab</link>
+                <guid isPermaLink="true">https://joepecsi.com/blog/building-my-homelab</guid>
+                
+                <category>homelab</category>
+                
+                
+            </item>
         
     </channel>
 </rss>
