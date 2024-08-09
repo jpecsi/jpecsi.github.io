@@ -5,9 +5,112 @@
         <description>A repository of technical rambling</description>
         <link>https://joepecsi.com/</link>
         <atom:link href="https://joepecsi.com/feed.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Tue, 09 Jul 2024 16:53:58 -0400</pubDate>
-        <lastBuildDate>Tue, 09 Jul 2024 16:53:58 -0400</lastBuildDate>
+        <pubDate>Thu, 08 Aug 2024 20:38:06 -0400</pubDate>
+        <lastBuildDate>Thu, 08 Aug 2024 20:38:06 -0400</lastBuildDate>
         <generator>Jekyll v4.3.3</generator>
+        
+            <item>
+                <title>Friends in Security - Code Review and Testing for Fun!</title>
+                <description>&lt;p&gt;In a professional setting, it’s important to separate teams of security professionals to avoid bias. Even for personal projects, I always like getting additional eyes on things to make sure I didn’t miss something.&lt;/p&gt;
+
+&lt;p&gt;Full disclosure, I am not a software developer by any means. I know enough to hack around, and am pretty comfortable with scripting languages like Python. Most of my personal projects that require coding are based on Python. I do that mainly for the reduced time to prototype, some things like KegWatch I have plans to move to a different language for performance reasons.&lt;/p&gt;
+
+&lt;p&gt;To maintain full transparency, I can admit that even as a security professional sometimes I miss things or make mistakes in my own code. The further I have progressed in my career, the more I have gotten away from constant hands on keyboard work and have instead focused on compliance, risk management, security architecture, and systems engineering. As someone who has never spent a lot of time doing red team security, it’s important to have friends that do.&lt;/p&gt;
+
+&lt;h2 id=&quot;code-review&quot;&gt;Code Review&lt;/h2&gt;
+&lt;p&gt;I have been investing a lot of time lately in my &lt;a href=&quot;https://joepecsi.com/projects/kegwatch&quot;&gt;KegWatch&lt;/a&gt; project. I have been focusing on the server side components while I wait for new hardware to arrive. This week I finished rewriting the API server (Python based of course, using Flask and Waitress) and wanted a proper security review done. One of my closest friends is also a cyber security professional, but on the other side and loves to poke and prod for vulnerabilities. I sent him a link to the repo and less than 24 hours later he’d identified 5 issues for me to look at. Two of the issues were just poor coding (uninitialized variable and a potential to index an empty list based on bad input), but three of them were XSS concerns.&lt;/p&gt;
+
+&lt;h3 id=&quot;what-is-xss&quot;&gt;What is XSS?&lt;/h3&gt;
+&lt;p&gt;Cross Site Scripting (XSS) is a vulnerability in web applications that allows an attacker to inject executable code into the web app. The motive of the attacker would be to steal cookies, session data, user redirection (to malicious sites), or even modifying/altering a website. The primary defense to this is proper input sanitization. You need to validate and clean all input before processing it to avoid accidentally executing malicious code.&lt;/p&gt;
+
+&lt;div class=&quot;page__gallery__wrapper&quot;&gt;
+  &lt;div class=&quot;page__gallery__images&quot;&gt;
+    &lt;img src=&quot;/images/blog/2024/08/08/meme.jpg&quot; loading=&quot;lazy&quot; alt=&quot;Proxmox Summary&quot; /&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;examples&quot;&gt;Examples&lt;/h3&gt;
+&lt;p&gt;The best way to learn is from mistakes, so I am happy to advertise what I did wrong and how I plan to fix it!&lt;/p&gt;
+
+&lt;p&gt;Below is a snippet of code that enables XSS…&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Get data from the DELETE request
+data = request.json
+
+
+# Build the query
+sql = &apos;DELETE FROM tbl_keg WHERE keg_id=%s&apos;
+values = (data.get(&apos;keg_id&apos;),)
+
+# Execute the query, make sure it worked...
+if (db_query(sql,values,1)):
+	log(1,&apos;Successfully deleted keg: &apos; + str(data.get(&apos;keg_id&apos;)))
+	
+	#### BAD CODE ####
+	return (&apos;Deleted Keg: &apos; + data.get(&apos;keg_id&apos;))
+
+else:
+	log(0,&apos;No changes made to keg id: &apos; + str(data.get(&apos;keg_id&apos;)))
+
+	#### BAD CODE #####
+	return (&apos;No changes made to keg id: &apos; + data.get(&apos;keg_id&apos;))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The issue with the code above, is in my &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;return&lt;/code&gt; lines. By returning &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;data.get(&apos;keg_id&apos;)&lt;/code&gt; I am sending back the user’s input without any validation or sanitization. In testing, if you embed executable code within the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DELETE&lt;/code&gt; request, it will execute:&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;{
+	&quot;keg_id&quot;:&quot;&amp;lt;script&amp;gt;alert(&apos;xss&apos;);&amp;lt;/script&amp;gt;&quot;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;page__gallery__wrapper&quot;&gt;
+  &lt;div class=&quot;page__gallery__images&quot;&gt;
+    &lt;img src=&quot;/images/blog/2024/08/08/attack.jpg&quot; loading=&quot;lazy&quot; alt=&quot;Proxmox Summary&quot; /&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;solution&quot;&gt;Solution&lt;/h2&gt;
+&lt;p&gt;As mentioned above, the best way to deal with this is to validate/sanitize user input. The other thing to do is not return the object directly provided by the user. Here is an example snippet of code for how I plan to validate the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;keg_id&lt;/code&gt; (which is a UUID) and any fields set for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;datetime&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;def validate(dv,dt):
+	# dv = data value | dt = data type
+	if dt == &apos;uuid&apos;:
+		try:
+			uuid_obj = UUID(dv, version=4)
+			return str(uuid_obj) == dv
+		except Exception:
+			return False
+			
+	elif dt == &apos;datetime&apos;:
+		try:
+			parse(dv)
+			return True
+		except Exception:
+			return False
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Given the way I have architected the application, I thought it would be best to build a single function for validation which makes it easier to implement as the API endpoints expand/change. Here is the workflow:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Send the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;request.json&lt;/code&gt; object from the HTTP request to the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;validator&lt;/code&gt; function&lt;/li&gt;
+  &lt;li&gt;Check the object for all known parameters and make sure they are the correct format&lt;/li&gt;
+  &lt;li&gt;Flag any pieces of data that aren’t correct&lt;/li&gt;
+  &lt;li&gt;After checking the object, if &lt;em&gt;anything&lt;/em&gt; failed return a boolean &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;False&lt;/code&gt;; if all data passes, return a sanitized dictionary with the parameters&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;I’ll be honest, building it out this way just made the most sense to me…but that doesn’t mean it’s correct. I’ll sleep a little better tonight though knowing that my sweet, precious beer data is secure.&lt;/p&gt;
+
+&lt;h2 id=&quot;final-thoughts&quot;&gt;Final Thoughts&lt;/h2&gt;
+&lt;p&gt;Some of these mistakes were pretty obvious, and to that I say…I know. I figured there would be a few unsafe things in the code, which is exactly why I aked for a second set of eyes. I’ve spent several hours over the last few days writing everything out to get to a functional state. Now that it works, it’s time to clean up and implement some best practices like data validation/sanitization and proper error handling. You can check out the code on &lt;a href=&quot;https://github.com/jpecsi/kegwatch&quot;&gt;my GitHub&lt;/a&gt;. Right now only the server side code is uploaded, but over the next few weeks I hope to get everything wrapped up and pushed.&lt;/p&gt;
+</description>
+                <pubDate>Thu, 08 Aug 2024 00:00:00 -0400</pubDate>
+                <link>https://joepecsi.com/blog/friends-in-security</link>
+                <guid isPermaLink="true">https://joepecsi.com/blog/friends-in-security</guid>
+                
+                <category>security</category>
+                
+                <category>development</category>
+                
+                <category>kegwatch</category>
+                
+                
+            </item>
         
             <item>
                 <title>The Cyber Sandbox - Creating a Home Lab for Endless Exploration</title>
